@@ -1,5 +1,4 @@
 import requests
-import json
 
 from auth_API import Authentication
 
@@ -14,11 +13,10 @@ class Calendar:
     def create(self, url_create_calendar: str, data_create_calendar: dict) -> None:
         """
         Создание календаря POST api/2.0/calendar
-        :param url_auth: URL для авторизации, например("http://192.168.25.179/api/2.0/authentication")
-        :param url_create_calendar: URL для создания календаря, например("http://192.168.25.179/api/2.0/calendar")
-        :param data_auth: словарь {логин, пароль}
-        :param data_create_calendar: словарь {данные для создания словаря, см. пример ниже в if __name__ == "__main__":
-    ""}
+        :param url_auth: URL для авторизации
+        :param url_create_calendar: URLсоздания календаря
+        :param data_auth: логин, пароль для авторизации
+        :param data_create_calendar: данные для создаваемого словаря
         :return: None
         """
 
@@ -32,7 +30,8 @@ class Calendar:
     def get_(self, url_create_calendar: str, calendar_id: int) -> None:
         """
         Получить календарь по идентификатору GET api/2.0/calendar/{calendarId}
-        calendarId - число, его можно брать из файла calendar.txt при создании ("objectId": "10")
+        :param url_create_calendar: URL из создания календаря
+        :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
         :return: None
         """
         url_get_calendar = url_create_calendar + '/' + str(calendar_id)
@@ -44,7 +43,9 @@ class Calendar:
     def change(self, url_create_calendar: str, calendar_id: str, data_change_calendar: dict):
         """
         Обновление календаря PUT api/2.0/calendar/{calendarId}
-        calendarId - число, его можно брать из файла calendar.txt при создании ("objectId": "10")
+        :param url_create_calendar: URL из создания календаря
+        :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
+        :param data_create_calendar: данные для изменяемого словаря
         :return: None
         """
         url_change_calendar = url_create_calendar + '/' + str(calendar_id)
@@ -56,7 +57,8 @@ class Calendar:
     def delete(self, url_create_calendar: str, calendar_id: int):
         """
         Удалить календарь по идентификатору DELETE api/2.0/calendar/{calendarId}
-        calendarId - число, его можно брать из файла calendar.txt при создании ("objectId": "10")
+        :param url_create_calendar: URL из создания календаря
+        :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
         :return: None
         """
         url_delete_calendar = url_create_calendar + '/' + str(calendar_id)
@@ -66,6 +68,7 @@ class Calendar:
     def get_default_params(self, url_create_calendar: str):
         """
         Получить параметры доступа по умолчанию GET api/2.0/calendar/sharing
+        :param url_create_calendar: URL из создания календаря
         :return: None
         """
         url_default_params = url_create_calendar + '/sharing'
@@ -76,6 +79,8 @@ class Calendar:
     def get_calendar_params(self, url_create_calendar: str, calendar_id: int):
         """
         Получить параметры доступа конкретного календаря GET api/2.0/calendar/{calendarId}/sharing
+        :param url_create_calendar: URL из создания календаря
+        :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
         :return: None
         """
         url_calendar_params = url_create_calendar + '/' + str(calendar_id) + '/sharing'
@@ -87,7 +92,7 @@ class Calendar:
 if __name__ == "__main__":
     """
 **************************************************************************************************
-    Данные для авторизации
+    Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
     url_auth = "http://192.168.25.179/api/2.0/authentication"
