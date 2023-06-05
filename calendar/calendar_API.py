@@ -1,16 +1,18 @@
+import datetime
+
 import requests
 
-from auth_API import Authentication
+from authentication.auth_API import Authentication
 
 
 class Calendar:
 
-    def __init__(self, url_auth, data_auth, url_create_calendar) -> None:
+    def __init__(self, url_auth, data_auth, url_API_calendar) -> None:
 
         token = Authentication().request_auth(url_auth, data_=data_auth)
         self.headers = {'Authorization': f'Bearer {token}'}
 
-        self.url_create_calendar = url_create_calendar
+        self.url_API_calendar = url_API_calendar
 
     def create(self, data_create_calendar: dict) -> None:
         """
@@ -22,10 +24,10 @@ class Calendar:
         :return: None
         """
 
-        response = requests.post(self.url_create_calendar, json=data_create_calendar, headers=self.headers)
+        response = requests.post(self.url_API_calendar, json=data_create_calendar, headers=self.headers)
         data = response.json()
 
-        with open("calendars/calendars.txt", "a") as f:
+        with open(f"calendars/calendars_'{datetime.date.today()}'.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание календаря id={data['response']['objectId']} с кодом:", response.status_code)
 
@@ -35,7 +37,7 @@ class Calendar:
         :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
         :return: None
         """
-        url_get_calendar = self.url_create_calendar + '/' + str(calendar_id)
+        url_get_calendar = self.url_API_calendar + '/' + str(calendar_id)
 
         response = requests.get(url_get_calendar, headers=self.headers)
         print(f"Запрос календаря id={calendar_id} с кодом", response.status_code)
@@ -48,7 +50,7 @@ class Calendar:
         :param data_create_calendar: данные для изменяемого словаря
         :return: None
         """
-        url_update_calendar = self.url_create_calendar + '/' + str(calendar_id)
+        url_update_calendar = self.url_API_calendar + '/' + str(calendar_id)
 
         response = requests.put(url_update_calendar, json=data_update_calendar, headers=self.headers)
         print(f"Изменение календаря id={calendar_id} с кодом:", response.status_code)
@@ -60,7 +62,7 @@ class Calendar:
         :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
         :return: None
         """
-        url_delete_calendar = self.url_create_calendar + '/' + str(calendar_id)
+        url_delete_calendar = self.url_API_calendar + '/' + str(calendar_id)
 
         response = requests.delete(url_delete_calendar, headers=self.headers)
         print(f"Удаление календаря id={calendar_id} с кодом", response.status_code)
@@ -70,7 +72,7 @@ class Calendar:
         Получить параметры доступа по умолчанию GET api/2.0/calendar/sharing
         :return: None
         """
-        url_default_params = self.url_create_calendar + '/sharing'
+        url_default_params = self.url_API_calendar + '/sharing'
 
         response = requests.get(url_default_params, headers=self.headers)
         print("Получение параметров доступа календаря по умолчанию с кодом:", response.status_code)
@@ -82,7 +84,7 @@ class Calendar:
         :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
         :return: None
         """
-        url_calendar_params = self.url_create_calendar+ '/' + str(calendar_id) + '/sharing'
+        url_calendar_params = self.url_API_calendar + '/' + str(calendar_id) + '/sharing'
         response = requests.get(url_calendar_params, headers=self.headers)
         print(f"Получение параметров доступа календаря id={calendar_id} с кодом:", response.status_code)
         print(response.json())
@@ -93,7 +95,7 @@ class Calendar:
         :param data_create_event: данные для изменяемого события
         :return: None
         """
-        url_create_event_default = self.url_create_calendar + '/event'
+        url_create_event_default = self.url_API_calendar + '/event'
         response = requests.post(url_create_event_default, json=data_create_event, headers=self.headers)
         data = response.json()
 
@@ -108,11 +110,11 @@ class Calendar:
         :param calendar_id: номер календаря
         :return: None
         """
-        url_create_event_calendar = self.url_create_calendar + '/' + str(calendar_id) + '/event'
+        url_create_event_calendar = self.url_API_calendar + '/' + str(calendar_id) + '/event'
         response = requests.post(url_create_event_calendar, json=data_create_event, headers=self.headers)
         data = response.json()
 
-        with open("calendars/events.txt", "a") as f:
+        with open(f"calendars/events_'{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание события в календаре id={calendar_id} с кодом:", response.status_code)
 
@@ -122,7 +124,7 @@ class Calendar:
         :param номер события
         :return: None
         """
-        url_get_event = self.url_create_calendar + '/events/' + str(event_id) + '/historybyid'
+        url_get_event = self.url_API_calendar + '/events/' + str(event_id) + '/historybyid'
         response = requests.get(url_get_event, headers=self.headers)
         data = response.json()
 
@@ -138,7 +140,7 @@ class Calendar:
         :param data_create_event: данные обновляемого события
         :return: None
         """
-        url_update_event = self.url_create_calendar + f'/{calendar_id}/{event_id}'
+        url_update_event = self.url_API_calendar + f'/{calendar_id}/{event_id}'
         response = requests.put(url_update_event, data_create_event, headers=self.headers)
         data = response.json()
 
@@ -150,7 +152,7 @@ class Calendar:
         Удаление серии событий DELETE api/2.0/calendar/events/{eventId}
         :return: None
         """
-        url_delete_event = self.url_create_calendar + f'/events/{event_id}'
+        url_delete_event = self.url_API_calendar + f'/events/{event_id}'
         response = requests.delete(url_delete_event, headers=self.headers)
 
         print(f"Удаление серии событий id={event_id} с кодом:", response.status_code)
@@ -173,7 +175,7 @@ if __name__ == "__main__":
     Данные для создания календаря/удаления календаря
 **************************************************************************************************
     """
-    url_create_calendar = "http://192.168.25.179/api/2.0/calendar"
+    url_API_calendar = "http://192.168.25.179/api/2.0/calendar"
     data_create_calendar = {
           "name": "Some calendar3",
           "description": "new_one2",
@@ -229,7 +231,7 @@ if __name__ == "__main__":
 
     """
 ******************************************************************************************************
-    Данные для изменения события
+    Данные для изменения события календаря
 ******************************************************************************************************
     """
     data_update_event = {
@@ -245,7 +247,7 @@ if __name__ == "__main__":
           "status": "tentative"
     }
 
-    calendar = Calendar(url_auth, data_auth, url_create_calendar)
+    calendar = Calendar(url_auth, data_auth, url_API_calendar)
 
 
 
