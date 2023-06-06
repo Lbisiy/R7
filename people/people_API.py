@@ -24,7 +24,7 @@ class People:
         response = requests.post(self.url_API_people, data_create_people, headers=self.headers)
         data = response.json()
 
-        with open(f"people/people_{datetime.date.today()}", "a") as f:
+        with open(f"people/people_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание пользователя с кодом:", response.status_code)
 
@@ -155,7 +155,7 @@ class People:
         response = requests.post(self.url_API_group, data_create_group, headers=self.headers)
         data = response.json()
 
-        with open(f"people/group_{datetime.date.today()}", "a") as f:
+        with open(f"people/group_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание группы с кодом:", response.status_code)
 
@@ -291,9 +291,10 @@ if __name__ == "__main__":
     data_update_group = {
         "groupName": "New-new group",
     }
+    """
+***************************************************************************************************
+    """
 
     people = People(url_auth, data_auth, url_API_people, url_API_group)
-    people.delete_group('36e31888-1309-403a-b43f-be28ec28c167')
 
-    people.get_all_groups()
-
+    people.get_all()
