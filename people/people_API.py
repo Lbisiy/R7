@@ -7,13 +7,13 @@ from authentication.auth_API import Authentication
 
 class People:
 
-    def __init__(self, url_auth, data_auth, url_API_people, url_API_group) -> None:
+    def __init__(self, url_auth: str, data_auth: dict) -> None:
 
         token = Authentication().request_auth(url_auth, data_=data_auth)
         self.headers = {'Authorization': f'Bearer {token}'}
 
-        self.url_API_people = url_API_people
-        self.url_API_group = url_API_group
+        self.url_API_people = url_auth + '/api/2.0/people'
+        self.url_API_group = url_auth + '/api/2.0/group'
 
     def create(self, data_create_people: dict):
         """
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
-    url_auth = "http://192.168.25.179/api/2.0/authentication"
+    url_auth = "http://192.168.25.179"
     data_auth = {
         "userName": "safin.marat@r7-office.ru",
         "password": "12345678"
@@ -230,7 +230,6 @@ if __name__ == "__main__":
     Данные для создания пользователя
 **************************************************************************************************
     """
-    url_API_people = "http://192.168.25.179/api/2.0/people"
     data_create_people = {
         "isVisitor": True,
         "email": "maratsafin.let@yandex.ru",
@@ -258,7 +257,7 @@ if __name__ == "__main__":
     """
     data_people_id = {
         "userIds": [
-        "6415a6f8-eedf-4a2f-9223-1e3bfa5bec0e",
+        "aa5d1c3d-476a-46a9-855c-db7cf43d2e3b",
         ]
     }
 
@@ -267,7 +266,6 @@ if __name__ == "__main__":
     Данные для создания группы
 **************************************************************************************************
     """
-    url_API_group = "http://192.168.25.179/api/2.0/group"
     data_create_group = {
         "groupName": "New group",
     }
@@ -295,6 +293,5 @@ if __name__ == "__main__":
 ***************************************************************************************************
     """
 
-    people = People(url_auth, data_auth, url_API_people, url_API_group)
-
-    people.create(data_create_people)
+    people = People(url_auth, data_auth)
+    people.create_group(data_create_group)

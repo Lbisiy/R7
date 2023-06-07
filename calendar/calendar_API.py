@@ -7,7 +7,7 @@ from authentication.auth_API import Authentication
 
 class Calendar:
 
-    def __init__(self, url_auth, data_auth) -> None:
+    def __init__(self, url_auth: str, data_auth: dict) -> None:
 
         token = Authentication().request_auth(url=url_auth, data_=data_auth)
         self.headers = {'Authorization': f'Bearer {token}'}
@@ -172,7 +172,6 @@ if __name__ == "__main__":
     Данные для создания календаря/удаления календаря
 **************************************************************************************************
     """
- #   url_API_calendar = "http://192.168.25.179"
     data_create_calendar = {
           "name": "Some calendar3",
           "description": "new_one2",

@@ -7,12 +7,12 @@ from authentication.auth_API import Authentication
 
 class Project:
 
-    def __init__(self, url_auth: str, data_auth: str) -> None:
-
-        self.url_API_project = url_auth + '/api/2.0/project'
+    def __init__(self, url_auth: str, data_auth: dict) -> None:
 
         token = Authentication().request_auth(url_auth, data_=data_auth)
         self.headers = {'Authorization': f'Bearer {token}'}
+
+        self.url_API_project = url_auth + '/api/2.0/project'
 
     def create_project(self, data_create_project: dict) -> None:
         """
@@ -96,6 +96,7 @@ class Project:
         response = requests.get(url_get_task, headers=self.headers)
         data = response.json()
 
+        print(f"Получение задачи с кодом:", response.status_code)
         print(data)
 
     def delete_task(self, task_id: int) -> None:
@@ -103,7 +104,12 @@ class Project:
         DELETE api/2.0/project/task/{taskid}
         :return: None
         """
-        pass
+        url_delete_task = self.url_API_project + f'/task/{task_id}'
+        response = requests.delete(url_delete_task, headers=self.headers)
+        data = response.json()
+
+        print(f"Удаление задачи с кодом:", response.status_code)
+        print(data)
 
 
 if __name__ == "__main__":
@@ -143,8 +149,8 @@ if __name__ == "__main__":
     data_create_task = {
         "title": "EEEEE",
     }
-
-    url_API_project = "http://192.168.25.179"
+    """
+**************************************************************************************************
+    """
 
     project = Project(url_auth, data_auth)
-    project.create_project(data_create_project)
