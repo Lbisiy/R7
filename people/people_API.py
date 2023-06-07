@@ -294,4 +294,3 @@ if __name__ == "__main__":
     """
 
     people = People(url_auth, data_auth)
-    people.create_group(data_create_group)
