@@ -13,17 +13,18 @@ class Authentication:
         :param data_: словарь {логин, пароль}
         :return: None
         """
-        response = requests.post(url, json=data_)
+        url_request = url + '/api/2.0/authentication'
+        response = requests.post(url_request, json=data_)
         token = response.json()['response']['token']
         print("Аутентификация с кодом", response.status_code)
         return token
 
 
 if __name__ == "__main__":
-    url_api = "http://192.168.25.179/api/2.0/authentication"
+    url = "http://192.168.25.179"
     data = {
         "userName": "safin.marat@r7-office.ru",
         "password": "12345678"
     }
     req = Authentication()
-    req.request_auth(url_api, data)
+    req.request_auth(url, data)

@@ -21,7 +21,7 @@ class People:
         :param data_create_people: данные создаваемого пользователя
         :return: None
         """
-        response = requests.post(self.url_API_people, data_create_people, headers=self.headers)
+        response = requests.post(self.url_API_people, json=data_create_people, headers=self.headers)
         data = response.json()
 
         with open(f"people/people_{datetime.date.today()}.txt", "a") as f:
@@ -47,7 +47,7 @@ class People:
         :return: None
         """
         url_update_people = self.url_API_people + f'/{people_id}'
-        response = requests.put(url_update_people, data_update_people, headers=self.headers)
+        response = requests.put(url_update_people, json=data_update_people, headers=self.headers)
         data = response.json()
 
         print(f"Обновление профиля пользователя id={people_id} с кодом:", response.status_code)
@@ -62,7 +62,7 @@ class People:
         :return: None
         """
         url_delete_people_list = self.url_API_people + '/delete'
-        response = requests.put(url_delete_people_list, data_people_id, headers=self.headers)
+        response = requests.put(url_delete_people_list, json=data_people_id, headers=self.headers)
         data = response.json()
 
         print(f'Удаление пользователей id={data_people_id["userIds"]} с кодом:', response.status_code)
@@ -102,7 +102,7 @@ class People:
         :return: None
         """
         url_update_status = self.url_API_people + f'/status/{status}'
-        response = requests.put(url_update_status, data_people_id, headers=self.headers)
+        response = requests.put(url_update_status, json=data_people_id, headers=self.headers)
         data = response.json()
 
         print(data)
@@ -128,7 +128,7 @@ class People:
         :return: None
         """
         url_update_type = self.url_API_people + f'/type/{type}'
-        response = requests.put(url_update_type, data_people_id, headers=self.headers)
+        response = requests.put(url_update_type, json=data_people_id, headers=self.headers)
         data = response.json()
 
         print(f'Изменение пользователей id={data_people_id["userIds"]} на тип={type} с кодом:', response.status_code)
@@ -146,20 +146,20 @@ class People:
         print(f'Получение текущего профиля пользователя id={data["response"]["id"]} с кодом:', response.status_code)
         print(data)
 
-    def create_group(self, data_create_group) -> None:
+    def create_group(self, data_create_group: dict) -> None:
         """
         Создание группы POST api/2.0/group
         :param данные создаваемой группы
         :return: None
         """
-        response = requests.post(self.url_API_group, data_create_group, headers=self.headers)
+        response = requests.post(self.url_API_group, json=data_create_group, headers=self.headers)
         data = response.json()
 
         with open(f"people/group_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание группы с кодом:", response.status_code)
 
-    def add_people_to_group(self, data_members_id, group_id) -> None:
+    def add_people_to_group(self, data_members_id: dict, group_id: str) -> None:
         """
         Добавление членов группы PUT api/2.0/group/{groupid}/members,
         сохраняя текущих участников и добавляя вместо них новых, указанных в запросе.
@@ -168,13 +168,13 @@ class People:
         :return: None
         """
         url_people_to_group = self.url_API_group + f'/{group_id}/members'
-        response = requests.put(url_people_to_group, data_members_id, headers=self.headers)
+        response = requests.put(url_people_to_group, json=data_members_id, headers=self.headers)
         data = response.json()
 
         print(f'Добавление нового пользователя id={data_members_id["members"]} с кодом:', response.status_code)
         print(data)
 
-    def update_group(self, data_update_group, group_id) -> None:
+    def update_group(self, data_update_group: dict, group_id: str) -> None:
         """
         Изменение группы PUT api/2.0/group/{groupid}
         :param данные создаваемой группы
@@ -182,7 +182,7 @@ class People:
         :return: None
         """
         url_update_group = self.url_API_group + f'/{group_id}'
-        response = requests.put(url_update_group, data_update_group, headers=self.headers)
+        response = requests.put(url_update_group, json=data_update_group, headers=self.headers)
         data = response.json()
 
         print(f'Изменение группы id={group_id} с кодом:', response.status_code)
@@ -199,7 +199,7 @@ class People:
         print(f'Получение всех групп с кодом:', response.status_code)
         print(data)
 
-    def delete_group(self, group_id) -> None:
+    def delete_group(self, group_id: str) -> None:
         """
         Удаление группы DELETE api/2.0/group/{groupid}
         :param group_id: идентификатор удаляемой группы
@@ -233,7 +233,7 @@ if __name__ == "__main__":
     url_API_people = "http://192.168.25.179/api/2.0/people"
     data_create_people = {
         "isVisitor": True,
-        "email": "maratsafin_let@mail.com",
+        "email": "maratsafin.let@yandex.ru",
         "firstname": "Marat",
         "lastname": "Marat",
         "password": "12345678"
@@ -297,4 +297,4 @@ if __name__ == "__main__":
 
     people = People(url_auth, data_auth, url_API_people, url_API_group)
 
-    people.get_all()
+    people.create(data_create_people)

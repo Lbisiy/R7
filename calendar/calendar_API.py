@@ -27,7 +27,7 @@ class Calendar:
         response = requests.post(self.url_API_calendar, json=data_create_calendar, headers=self.headers)
         data = response.json()
 
-        with open(f"calendars/calendars_{datetime.date.today()}.txt", "a") as f:
+        with open(f"calendar/created_calendars/calendars_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание календаря id={data['response']['objectId']} с кодом:", response.status_code)
 
@@ -56,7 +56,7 @@ class Calendar:
         print(f"Изменение календаря id={calendar_id} с кодом:", response.status_code)
         print(response.json())
 
-    def delete(self, calendar_id: int) -> None:
+    def delete_calendar(self, calendar_id: int) -> None:
         """
         Удалить календарь по идентификатору DELETE api/2.0/calendar/{calendarId}
         :param calendar_id: номер календаря (номера смотрим в файле calendar.txt)
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
-    url_auth = "http://192.168.25.179/api/2.0/authentication"
+    url_auth = "http://192.168.25.179"
     data_auth = {
         "userName": "safin.marat@r7-office.ru",
         "password": "12345678"
@@ -251,3 +251,4 @@ if __name__ == "__main__":
     """
 
     calendar = Calendar(url_auth, data_auth, url_API_calendar)
+    calendar.create(data_create_calendar)
