@@ -228,4 +228,4 @@ if __name__ == "__main__":
     """
 
     files = Files(url_auth, data_auth)
-    files.delete_list(data_delete)
+    files.create_folder(data_create_folder)
