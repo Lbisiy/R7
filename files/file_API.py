@@ -223,6 +223,9 @@ if __name__ == "__main__":
         "deleteAfter": True,
         "immediately": True
     }
+    """
+****************************************************************************************************
+    """
 
     files = Files(url_auth, data_auth)
     files.delete_list(data_delete)
