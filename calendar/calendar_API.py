@@ -24,7 +24,7 @@ class Calendar:
         response = requests.post(self.url_API_calendar, json=data_create_calendar, headers=self.headers)
         data = response.json()
 
-        with open(f"calendar/created_calendars/calendars_{datetime.date.today()}.txt", "a") as f:
+        with open(f"created_calendars/calendars_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание календаря id={data['response']['objectId']} с кодом:", response.status_code)
 
@@ -96,7 +96,7 @@ class Calendar:
         response = requests.post(url_create_event_default, json=data_create_event, headers=self.headers)
         data = response.json()
 
-        with open(f"calendar/created_calendars/events_{datetime.date.today()}.txt", "a") as f:
+        with open(f"created_calendars/events_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print("Создание события в календаре по умолчанию с кодом:", response.status_code)
 
@@ -111,7 +111,7 @@ class Calendar:
         response = requests.post(url_create_event_calendar, json=data_create_event, headers=self.headers)
         data = response.json()
 
-        with open(f"calendar/created_calendars/events_{datetime.date.today()}.txt", "a") as f:
+        with open(f"created_calendars/events_{datetime.date.today()}.txt", "a") as f:
             f.writelines(str(data) + '\n')
         print(f"Создание события в календаре id={calendar_id} с кодом:", response.status_code)
 
@@ -246,3 +246,5 @@ if __name__ == "__main__":
 ******************************************************************************************************
     """
     calendar = Calendar(url_auth, data_auth)
+    calendar.create(data_create_calendar)
+    calendar.create_event_calendar(data_create_event, 88)

@@ -294,3 +294,4 @@ if __name__ == "__main__":
     """
 
     people = People(url_auth, data_auth)
+    people.create(data_create_people)
