@@ -1,5 +1,4 @@
 import datetime
-
 import requests
 
 from authentication.auth_API import Authentication
@@ -24,9 +23,12 @@ class People:
         response = requests.post(self.url_API_people, json=data_create_people, headers=self.headers)
         data = response.json()
 
-        with open(f"people/people_{datetime.date.today()}.txt", "a") as f:
-            f.writelines(str(data) + '\n')
+        # with open(f"people/people_{datetime.date.today()}.txt", "a") as f:
+        #     f.writelines(str(data) + '\n')
+        print("***************************************************")
         print(f"Создание пользователя с кодом:", response.status_code)
+        print("***************************************************")
+        print()
 
     def get_all(self):
         """
@@ -36,8 +38,11 @@ class People:
         response = requests.get(self.url_API_people, headers=self.headers)
         data = response.json()
 
+        print("***************************************************")
         print(f"Получение профилей всех пользователей с кодом:", response.status_code)
-        print(data)
+        print("***************************************************")
+        print()
+        return data
 
     def update(self, data_update_people: dict, people_id: str):
         """
@@ -50,15 +55,17 @@ class People:
         response = requests.put(url_update_people, json=data_update_people, headers=self.headers)
         data = response.json()
 
+        print("***************************************************")
         print(f"Обновление профиля пользователя id={people_id} с кодом:", response.status_code)
-        print(data)
+        print("***************************************************")
+        print()
 
     def delete_people_list(self, data_people_id: dict) -> None:
         """
         Удаление списка заблокированных пользователей с уникальными номерами, указанными в запросе
         PUT api/2.0/people/delete
         Заблокированные пользователи имеют статус: Terminated
-        :param data_update_people: список уникальных идентификаторов пользователей
+        :param data_people_id: список уникальных идентификаторов пользователей
         :return: None
         """
         url_delete_people_list = self.url_API_people + '/delete'
@@ -79,7 +86,7 @@ class People:
         response = requests.delete(url_delete_people, headers=self.headers)
         data = response.json()
 
-        print(f'Удаление пользователя id= с кодом:', response.status_code)
+        print(f'Удаление пользователя id={people_id} с кодом:', response.status_code)
         print(data)
 
     def get_status(self) -> None:
@@ -93,12 +100,13 @@ class People:
 
         print(f'Получение статуса текущего пользователя с кодом:', response.status_code)
         print(data)
+        return data
 
     def update_status(self, data_people_id: dict, status: str) -> None:
         """
         Изменение статуса пользователя PUT api/2.0/people/status/{status}
         :param data_people_id: список уникальных идентификаторов пользователей
-        :param Active, Terminated, LeaveOfAbsence, Default, All
+        :param status: Active, Terminated, LeaveOfAbsence, Default, All
         :return: None
         """
         url_update_status = self.url_API_people + f'/status/{status}'
@@ -119,12 +127,13 @@ class People:
 
         print(f'Получение профилей пользователей по статусу={status} с кодом:', response.status_code)
         print(data)
+        return data
 
     def update_type(self, data_people_id: dict, type: str) -> None:
         """
         Изменение типа пользователя PUT api/2.0/people/type/{type}
-        :param список уникальных идентификаторов пользователей
-        :param All, User, Visitor
+        :param data_people_id: список уникальных идентификаторов пользователей
+        :param type:All, User, Visitor
         :return: None
         """
         url_update_type = self.url_API_people + f'/type/{type}'
@@ -145,11 +154,12 @@ class People:
 
         print(f'Получение текущего профиля пользователя id={data["response"]["id"]} с кодом:', response.status_code)
         print(data)
+        return data
 
     def create_group(self, data_create_group: dict) -> None:
         """
         Создание группы POST api/2.0/group
-        :param данные создаваемой группы
+        :param data_create_group: данные создаваемой группы
         :return: None
         """
         response = requests.post(self.url_API_group, json=data_create_group, headers=self.headers)
@@ -163,8 +173,8 @@ class People:
         """
         Добавление членов группы PUT api/2.0/group/{groupid}/members,
         сохраняя текущих участников и добавляя вместо них новых, указанных в запросе.
-        :param индентификаторы членов группы
-        :param инентификатор группы
+        :param data_members_id: индентификаторы членов группы
+        :param group_id: инентификатор группы
         :return: None
         """
         url_people_to_group = self.url_API_group + f'/{group_id}/members'
@@ -177,7 +187,7 @@ class People:
     def update_group(self, data_update_group: dict, group_id: str) -> None:
         """
         Изменение группы PUT api/2.0/group/{groupid}
-        :param данные создаваемой группы
+        :param data_update_group: данные создаваемой группы
         :param group_id: идентификатор изменяемой группы
         :return: None
         """
@@ -198,6 +208,7 @@ class People:
 
         print(f'Получение всех групп с кодом:', response.status_code)
         print(data)
+        return data
 
     def delete_group(self, group_id: str) -> None:
         """
@@ -212,6 +223,30 @@ class People:
         print(f'Удаление группы id={group_id} с кодом:', response.status_code)
         print(data)
 
+    def update_email(self, people_id: str, data_update_email: dict) -> None:
+        """
+        Задание нового адреса электронной почты для пользователя
+        PUT api/2.0/people/{userid}/email
+        """
+        url_update_email = self.url_API_people + f'/{people_id}/email'
+        response = requests.put(url_update_email, json=data_update_email, headers=self.headers)
+        data = response.json()
+
+        print(f'Изменение адреса эл. почты пользователя id={people_id} с кодом:', response.status_code)
+        print(data)
+
+    def update_password(self, people_id: str, data_update_password: dict) -> None:
+        """
+        Задание нового пароля пользователя
+        PUT api/2.0/people/{userid}/password
+        """
+        url_update_email = self.url_API_people + f'/{people_id}/password'
+        response = requests.put(url_update_email, json=data_update_password, headers=self.headers)
+        data = response.json()
+
+        print(f'Изменение адреса пароля пользователя id={people_id} с кодом:', response.status_code)
+        print(data)
+
 
 if __name__ == "__main__":
     """
@@ -219,10 +254,10 @@ if __name__ == "__main__":
     Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
-    url_auth = "http://192.168.25.179"
+    url_auth = "http://192.168.26.130/"
     data_auth = {
         "userName": "safin.marat@r7-office.ru",
-        "password": "12345678"
+        "password": "Hsuhsh35dr"
     }
 
     """
@@ -282,16 +317,32 @@ if __name__ == "__main__":
     }
 
     """
- **************************************************************************************************
-     Данные для изменения группы
- **************************************************************************************************
-     """
+**************************************************************************************************
+    Данные для изменения группы
+**************************************************************************************************
+    """
     data_update_group = {
         "groupName": "New-new group",
     }
-    """
-***************************************************************************************************
-    """
 
-    people = People(url_auth, data_auth)
-    people.create_group(data_create_group)
+    """
+**************************************************************************************************
+    Данные для изменения e-mail пользователя
+**************************************************************************************************
+      """
+    data_update_email = {
+        "userid": "0290d453-4cee-44d4-8f4e-cdda80afb031",
+        "email": "r7testmail@mail.ru",
+    }
+    """
+**************************************************************************************************
+    Данные для изменения пароля пользователя
+**************************************************************************************************
+      """
+    data_update_password = {
+        "userid": "0290d453-4cee-44d4-8f4e-cdda80afb031",
+        "password": "Hsuhsh35dr"
+    }
+    """
+**************************************************************************************************
+    """

@@ -161,10 +161,10 @@ if __name__ == "__main__":
     Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
-    url_auth = "http://192.168.25.179"
+    url_auth = "http://192.168.26.206"
     data_auth = {
-        "userName": "safin.marat@r7-office.ru",
-        "password": "12345678"
+        "userName": "belousov.vitalii@r7-office.ru",
+        "password": "Hsuhsh35dr"
     }
 
     """
