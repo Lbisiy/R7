@@ -14,7 +14,7 @@ class People:
         self.url_API_people = url_auth + '/api/2.0/people'
         self.url_API_group = url_auth + '/api/2.0/group'
 
-    def create(self, data_create_people: dict):
+    def create_user(self, data_create_people: dict) -> str:
         """
         Создаение нового пользователя POST api/2.0/people
         :param data_create_people: данные создаваемого пользователя
@@ -25,10 +25,8 @@ class People:
 
         # with open(f"people/people_{datetime.date.today()}.txt", "a") as f:
         #     f.writelines(str(data) + '\n')
-        print("***************************************************")
         print(f"Создание пользователя с кодом:", response.status_code)
-        print("***************************************************")
-        print()
+        return data["response"]["id"]
 
     def get_all(self):
         """
@@ -37,11 +35,7 @@ class People:
         """
         response = requests.get(self.url_API_people, headers=self.headers)
         data = response.json()
-
-        print("***************************************************")
         print(f"Получение профилей всех пользователей с кодом:", response.status_code)
-        print("***************************************************")
-        print()
         return data
 
     def update(self, data_update_people: dict, people_id: str):
@@ -54,11 +48,7 @@ class People:
         url_update_people = self.url_API_people + f'/{people_id}'
         response = requests.put(url_update_people, json=data_update_people, headers=self.headers)
         data = response.json()
-
-        print("***************************************************")
-        print(f"Обновление профиля пользователя id={people_id} с кодом:", response.status_code)
-        print("***************************************************")
-        print()
+        print(f"Обновление профиля пользователя <<id={people_id}>> с кодом:", response.status_code)
 
     def delete_people_list(self, data_people_id: dict) -> None:
         """
@@ -73,9 +63,8 @@ class People:
         data = response.json()
 
         print(f'Удаление пользователей id={data_people_id["userIds"]} с кодом:', response.status_code)
-        print(data)
 
-    def delete_person(self, people_id: str) -> None:
+    def delete_user(self, people_id: str) -> None:
         """
         Удаление заблокированного пользователя DELETE api/2.0/people/{userid}
         Заблокированный пользователь имеет статус: Terminated
@@ -84,10 +73,7 @@ class People:
         """
         url_delete_people = self.url_API_people + f'/{people_id}'
         response = requests.delete(url_delete_people, headers=self.headers)
-        data = response.json()
-
-        print(f'Удаление пользователя id={people_id} с кодом:', response.status_code)
-        print(data)
+        print(f'Удаление пользователя <<id={people_id}>> с кодом:', response.status_code)
 
     def get_status(self) -> None:
         """
@@ -97,12 +83,11 @@ class People:
         url_get_status = self.url_API_people + '/import/status'
         response = requests.get(url_get_status, headers=self.headers)
         data = response.json()
-
         print(f'Получение статуса текущего пользователя с кодом:', response.status_code)
         print(data)
         return data
 
-    def update_status(self, data_people_id: dict, status: str) -> None:
+    def update_user_status(self, data_people_status: dict, status: str) -> None:
         """
         Изменение статуса пользователя PUT api/2.0/people/status/{status}
         :param data_people_id: список уникальных идентификаторов пользователей
@@ -110,10 +95,8 @@ class People:
         :return: None
         """
         url_update_status = self.url_API_people + f'/status/{status}'
-        response = requests.put(url_update_status, json=data_people_id, headers=self.headers)
-        data = response.json()
-
-        print(data)
+        response = requests.put(url_update_status, json=data_people_status, headers=self.headers)
+        print(f'Обновление статуса текущего пользователя на статус <<{status}>> с кодом:', response.status_code)
 
     def get_profiles_by_status(self, status: str) -> None:
         """
@@ -143,7 +126,7 @@ class People:
         print(f'Изменение пользователей id={data_people_id["userIds"]} на тип={type} с кодом:', response.status_code)
         print(data)
 
-    def get_my_profile(self) -> None:
+    def get_my_profile(self) -> dict:
         """
         Получение информации о текущем профиле пользователя GET api/2.0/people/@self
         :return: None
@@ -152,8 +135,7 @@ class People:
         response = requests.get(url_my_profile, headers=self.headers)
         data = response.json()
 
-        print(f'Получение текущего профиля пользователя id={data["response"]["id"]} с кодом:', response.status_code)
-        print(data)
+        print(f'Получение текущего профиля пользователя <<id={data["response"]["id"]}>> с кодом:', response.status_code)
         return data
 
     def create_group(self, data_create_group: dict) -> None:
@@ -254,9 +236,9 @@ if __name__ == "__main__":
     Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
-    url_auth = "http://192.168.26.130/"
+    url_auth = "http://192.168.26.194/"
     data_auth = {
-        "userName": "safin.marat@r7-office.ru",
+        "userName": "support@r7-office.ru",
         "password": "Hsuhsh35dr"
     }
 
@@ -267,10 +249,10 @@ if __name__ == "__main__":
     """
     data_create_people = {
         "isVisitor": True,
-        "email": "maratsafin.let@yandex.ru",
-        "firstname": "Marat",
-        "lastname": "Marat",
-        "password": "12345678"
+        "email": "r7testmail@mail.ru",
+        "firstname": "Fedor",
+        "lastname": "Fedorov",
+        "password": "Hsuhsh35dr"
     }
 
     """
@@ -279,7 +261,7 @@ if __name__ == "__main__":
 **************************************************************************************************
     """
     data_update_people = {
-        "isVisitor": False,
+        "isVisitor": True,
         "email": "maratsafin.let@gmail.com",
         "firstname": "Ivan",
         "lastname": "Ivan"
@@ -345,4 +327,11 @@ if __name__ == "__main__":
     }
     """
 **************************************************************************************************
+    Данные для изменения статуса пользователей
+**************************************************************************************************
     """
+    data_people_status = {
+        "userIds": [
+            "0"
+        ]
+    }

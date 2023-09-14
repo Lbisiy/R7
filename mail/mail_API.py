@@ -11,6 +11,43 @@ class Mail:
 
         self.url_API_mail = url_auth + '/api/2.0/mail'
 
+    def create_account_by_email_password(self, data_create_account):
+        """
+        POST api/2.0/mail/accounts/simple
+        :return:
+        """
+        url_create_account = self.url_API_mail + '/accounts/simple'
+        response = requests.post(url_create_account, json=data_create_account, headers=self.headers)
+        print("Подключение учетной записи почты с помощью логина и пароля с кодом:", response.status_code)
+
+    def delete_account(self, data_delete_account):
+        """
+        DELETE api/2.0/mail/accounts
+        :return:
+        """
+        url_delete_account = self.url_API_mail + '/accounts'
+        response = requests.delete(url_delete_account, json=data_delete_account, headers=self.headers)
+        print(f"Удаление учетной записи почты <<{data_delete_account['email']}>> с кодом:", response.status_code)
+
+    def send_email(self, data_send_email):
+        """
+        PUT api/2.0/mail/messages/simpleSend
+        :return:
+        """
+        url_send_email = self.url_API_mail + '/messages/simpleSend'
+        response = requests.put(url_send_email, json=data_send_email, headers=self.headers)
+        print(f"Отправка письма с кодом:", response.status_code)
+
+    def get_mail_operation(self):
+        """
+        GET api/2.0/mail/operations
+        :return:
+        """
+        url_mail_operation = self.url_API_mail + '/operations'
+        response = requests.get(url_mail_operation, headers=self.headers)
+        data = response.json()
+        print(f"Список почтовых операций с кодом:", response.status_code)
+
     def create_filter(self, data_create_filter: dict):
         """
 
@@ -72,9 +109,3 @@ if __name__ == "__main__":
                     }
         }
     }
-   # data = {'id': 6, 'name': '1'}
-
-    mail = Mail(url_auth, data_auth)
-    mail.get_filters()
-   # mail.create_filter(data_create_filter)
-    mail.check_filter(data_create_filter)

@@ -163,6 +163,3 @@ if __name__ == "__main__":
     data_email_activation = {
         "show": True,
     }
-
-    settings_ = CommonSettings(url_auth, data_auth)
-    settings_.get_size_quota()

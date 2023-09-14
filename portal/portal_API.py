@@ -90,6 +90,3 @@ if __name__ == "__main__":
         "userName": "safin.marat@r7-office.ru",
         "password": "12345678"
     }
-
-    portal = Portal(url_auth, data_auth)
-    portal.get()

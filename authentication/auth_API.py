@@ -18,10 +18,10 @@ class Authentication:
         url_request = self.url + '/api/2.0/authentication'
         response = requests.post(url_request, json=self.data_)
         token = response.json()['response']['token']
+        print()
         print("***************************************************")
         print("Аутентификация с кодом", response.status_code)
         print("***************************************************")
-        print()
         return token
 
     def twofactor_request_auth(self, url: str, data_: dict, auth_code: int):
@@ -43,12 +43,12 @@ class Authentication:
         return token
 
     @staticmethod
-    def set_phone(url: str, data_phone: dict) -> None:
+    def set_phone(url_: str, data_phone: dict) -> None:
         """
         Установить телефон для пользователя POST api/2.0/authentication/setphone
         :return: None
         """
-        url_set_phone = url + '/api/2.0/authentication/setphone'
+        url_set_phone = url_ + '/api/2.0/authentication/setphone'
         response = requests.post(url_set_phone, json=data_phone)
         print("***************************************************")
         print("Установка телефона пользователя с кодом", response.status_code)
@@ -56,12 +56,12 @@ class Authentication:
         print()
 
     @staticmethod
-    def send_sms(url: str, data_: dict) -> None:
+    def send_sms(url_: str, data_: dict) -> None:
         """
         Отправление СМС с кодом аутентификации POST api/2.0/authentication/sendsms
         :return: None
         """
-        url_send_sms = url + '/api/2.0/authentication/sendsms'
+        url_send_sms = url_ + '/api/2.0/authentication/sendsms'
         response = requests.post(url_send_sms, json=data_)
         data_info = response.json()
         print("***************************************************")
@@ -91,8 +91,5 @@ if __name__ == "__main__":
         "mobilePhone": "8(921)9516961"
     }
 
-    auth = Authentication()
-    auth.request_auth(url, data)
-    auth.set_phone(url, data_phone)
-    auth.send_sms(url, data)
+
 

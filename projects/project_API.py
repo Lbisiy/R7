@@ -3,6 +3,7 @@ import datetime
 import requests
 
 from authentication.auth_API import Authentication
+from people.people_API import People
 
 
 class Project:
@@ -14,7 +15,7 @@ class Project:
 
         self.url_API_project = url_auth + '/api/2.0/project'
 
-    def create_project(self, data_create_project: dict) -> None:
+    def create_project(self, data_create_project: dict) -> int:
         """
         Создание проекта POST api/2.0/project
         :param data_create_project: данные создаваемого проекта
@@ -23,11 +24,11 @@ class Project:
         response = requests.post(self.url_API_project, json=data_create_project, headers=self.headers)
         data = response.json()
 
-        with open(f"projects/projects_{datetime.date.today()}.txt", "a") as f:
-            f.writelines(str(data) + '\n')
+        # with open(f"projects/projects_{datetime.date.today()}.txt", "a") as f:
+        #     f.writelines(str(data) + '\n')
 
         print(f"Создание проекта с кодом:", response.status_code)
-        print(data)
+        return data['response']['id']
 
     def get(self) -> None:
         """
@@ -36,11 +37,10 @@ class Project:
         """
         response = requests.get(self.url_API_project, headers=self.headers)
         data = response.json()
-
         print(f"Получение всех проектов с кодом:", response.status_code)
         print(data)
 
-    def update(self, data_update_project: dict, project_id: int) -> None:
+    def update_project(self, data_update_project: dict, project_id: int) -> None:
         """
         Обновление проекта PUT api/2.0/project/{id}
         :param data_update_project: данные обновляемого проекта
@@ -48,12 +48,8 @@ class Project:
         :return: None
         """
         url_update_project = self.url_API_project + f'/{project_id}'
-
         response = requests.put(url_update_project, json=data_update_project, headers=self.headers)
-        data = response.json()
-
-        print(f'Обновление проекта id={project_id} с кодом:', response.status_code)
-        print(data)
+        print(f'Обновление проекта <<id={project_id}>> с кодом:', response.status_code)
 
     def delete_project(self, project_id: int) -> None:
         """
@@ -62,14 +58,10 @@ class Project:
         :return: None
         """
         url_delete_project = self.url_API_project + f'/{project_id}'
-
         response = requests.delete(url_delete_project, headers=self.headers)
-        data = response.json()
+        print(f'Удаление проекта <<id={project_id}>> с кодом:', response.status_code)
 
-        print(f'Удаление проекта id={project_id} с кодом:', response.status_code)
-        print(data)
-
-    def create_task(self, data_create_task: dict, project_id: int) -> None:
+    def create_task(self, data_create_task: dict, project_id: int) -> int:
         """
         Создание задачи в выбранном проекте POST api/2.0/project/{projectid}/task
         :param data_create_task: данные создаваемой задачи
@@ -80,11 +72,11 @@ class Project:
         response = requests.post(url_create_task, json=data_create_task, headers=self.headers)
         data = response.json()
 
-        with open(f"projects/tasks_{datetime.date.today()}.txt", "a") as f:
-            f.writelines(str(data) + '\n')
+        # with open(f"projects/tasks_{datetime.date.today()}.txt", "a") as f:
+        #     f.writelines(str(data) + '\n')
 
         print(f"Создание задачи с кодом:", response.status_code)
-        print(data)
+        return data['response']['id']
 
     def get_task(self, project_id: int) -> None:
         """
@@ -107,9 +99,90 @@ class Project:
         url_delete_task = self.url_API_project + f'/task/{task_id}'
         response = requests.delete(url_delete_task, headers=self.headers)
         data = response.json()
-
         print(f"Удаление задачи с кодом:", response.status_code)
-        print(data)
+
+    def update_task(self, data_update_task: dict, task_id: int):
+        """
+        PUT api/2.0/project/task/{taskid}
+        :return:
+        """
+        url_update_task = self.url_API_project + f'/task/{task_id}'
+        response = requests.put(url_update_task, json=data_update_task, headers=self.headers)
+        print(f"Обновление задачи с кодом:", response.status_code)
+
+    def create_milestone(self, data_create_milestone: dict, project_id: int) -> int:
+        """
+        Создание вехи в выбранном проекте POST api/2.0/project/{id}/milestone
+        :param data_create_task: данные создаваемой задачи
+        :param project_id: уникальный идентификатор проекта
+        :return: None
+        """
+        url_create_milestone = self.url_API_project + f'/{project_id}/milestone'
+        response = requests.post(url_create_milestone, json=data_create_milestone, headers=self.headers)
+        data = response.json()
+
+        # with open(f"projects/tasks_{datetime.date.today()}.txt", "a") as f:
+        #     f.writelines(str(data) + '\n')
+
+        print(f"Создание вехи с кодом:", response.status_code)
+        return data['response']['id']
+
+    def update_milestone(self, data_update_milestone: dict, milestone_id: int):
+        """
+        PUT api/2.0/project/milestone/{id}
+        :return:
+        """
+        url_update_milestone = self.url_API_project + f'/milestone/{milestone_id}'
+        response = requests.put(url_update_milestone, json=data_update_milestone, headers=self.headers)
+        print(f"Обновление вехи с кодом:", response.status_code)
+
+    def delete_milestones(self, milestone_id: int):
+        """
+        DELETE api/2.0/project/milestone/{id}
+        :return:
+        """
+        url_delete_milestone = self.url_API_project + f'/milestone/{milestone_id}'
+        response = requests.delete(url_delete_milestone, headers=self.headers)
+        print(f"Удаление вехи с кодом:", response.status_code)
+
+    def create_discussion(self, data_create_discussion: dict, project_id) -> str:
+        """
+        POST api/2.0/project/{projectid}/message
+        :param data_discussion:
+        :return:
+        """
+        url_create_discussion = self.url_API_project + f'/{project_id}/message'
+        response = requests.post(url_create_discussion, json=data_create_discussion, headers=self.headers)
+        data = response.json()
+        print(f"Создание обсуждения с кодом:", response.status_code)
+        return data['response']['id']
+
+    def update_discussion(self, data_update_discussion: dict, discussion_id: str) -> None:
+        """
+        PUT api/2.0/project/message/{messageid}
+        :return:
+        """
+        url_update_discussion = self.url_API_project + f'/message/{discussion_id}'
+        response = requests.put(url_update_discussion, json=data_update_discussion, headers=self.headers)
+        print(f"Обновление обсуждения с кодом:", response.status_code)
+
+    def delete_discussion(self, discussion_id: str):
+        """
+        DELETE api/2.0/project/message/{messageid}
+        :return:
+        """
+        url_delete_discussion = self.url_API_project + f'/message/{discussion_id}'
+        response = requests.delete(url_delete_discussion, headers=self.headers)
+        print(f"Удаление обсуждения с кодом:", response.status_code)
+
+    def create_report(self, data_create_report: dict):
+        """
+        POST api/2.0/project/report
+        :return:
+        """
+        url_create_report = self.url_API_project + '/report'
+        response = requests.post(url_create_report, json=data_create_report, headers=self.headers)
+        print(f"Создание отчета <<{data_create_report['reportType']}>> с кодом:", response.status_code)
 
 
 if __name__ == "__main__":
@@ -118,10 +191,10 @@ if __name__ == "__main__":
     Данные для авторизации (при запуске подставлять свои значения)
 **************************************************************************************************
     """
-    url_auth = "http://192.168.25.179"
+    url_auth = "http://192.168.26.194/"
     data_auth = {
-        "userName": "safin.marat@r7-office.ru",
-        "password": "12345678"
+        "userName": "support@r7-office.ru",
+        "password": "Hsuhsh35dr"
     }
     """
 **************************************************************************************************
@@ -129,7 +202,7 @@ if __name__ == "__main__":
 **************************************************************************************************
     """
     data_create_project = {
-        "title": "XXXXX project",
+        "title": "XXXXX222 project",
         "responsibleID": "b53f1506-006d-11ee-bdfc-fa163e748144",
     }
     """
@@ -145,13 +218,90 @@ if __name__ == "__main__":
 **************************************************************************************************
     Данные для создания задачи
 **************************************************************************************************
-       """
+    """
     data_create_task = {
         "title": "EEEEE",
     }
     """
 **************************************************************************************************
+    Данные для обновления задачи
+**************************************************************************************************
     """
+    data_update_task = {
+          "description": "Updated description",
+          "priority": "Normal",
+          "title": "Updated task",
+    }
 
-    project = Project(url_auth, data_auth)
-    project.create_task(data_create_task, 10)
+    """
+**************************************************************************************************
+    Данные для создания вехи
+**************************************************************************************************
+    """
+    data_create_milestone = {
+        "title": "Milestone",
+        "deadline": "2024-01-01T06-30-00.000Z",
+        "isKey": False,
+        "isNotify": False,
+        "description": "Some text",
+        "responsible": "0",
+        "notifyResponsible": False
+    }
+    """
+**************************************************************************************************
+    Данные для обновления вехи
+**************************************************************************************************
+    """
+    data_update_milestone = {
+        "title": "Updated",
+        "deadline": "2011-03-23T14:27:14",
+        "isKey": False,
+        "status": "Open"
+    }
+    """
+**************************************************************************************************
+    Данные для создания обсуждения
+**************************************************************************************************
+    """
+    data_create_discussion = {
+          "title": "Discussion",
+          "content": "Some text",
+          "participants": [],
+          "notify": False
+    }
+    """
+**************************************************************************************************
+    Данные для обновления обсуждения
+**************************************************************************************************
+    """
+    data_update_discussion = {
+        "projectid": 1234,
+        "title": "Some text",
+        "content": "Some text",
+        "participants": "Some text",
+        "notify": True
+    }
+
+    """
+**************************************************************************************************
+     Данные для создания пользователя
+**************************************************************************************************
+    """
+    data_create_people = {
+        "isVisitor": True,
+        "email": "r7testmail@ya.ru",
+        "firstname": "Fedor",
+        "lastname": "Fedorov",
+        "password": "Hsuhsh35dr"
+    }
+    """
+**************************************************************************************************
+     Данные для создания отчета
+**************************************************************************************************
+    """
+    data_create_report = {
+          "name": "Report",
+          "autoGenerated": True,
+          "reportType": "MilestonesNearest",
+          "reportTimeInterval": "Absolute",
+        }
