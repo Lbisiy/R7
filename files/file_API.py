@@ -13,6 +13,8 @@ class Files:
         self.headers = {'Authorization': f'Bearer {token}'}
 
         self.url_API_files = url_auth + '/api/2.0/files'
+        print("Инициализация Модуля Документы")
+        print("***************************************************")
 
     def upload_file(self, file_name: str) -> None:
         """
@@ -49,7 +51,7 @@ class Files:
         Создание папки POST api/2.0/files/folder/{folderId}
         :param data_create_folder: данные изменяемой папки
         :param folder_id: номер родительской папки
-        :return: None
+        :return: id папки
         """
         url_create_folder = self.url_API_files + f'/folder/{folder_id}'
         response = requests.post(url_create_folder, json=data_create_folder, headers=self.headers)
@@ -64,13 +66,12 @@ class Files:
     def delete_folder(self, data_delete_folder: dict, folder_id: int) -> None:
         """
         Удаление папки с заданным идентификатором DELETE api/2.0/files/folder/{folderId}
-        :param id_folder - идентификатор папки
-        :param data_delete_file - словарь с параметрами удаления
+        :param data_delete_folder: словарь с параметрами удаления
+        :param folder_id: идентификатор папки
         :return: None
         """
         url_delete_folder = self.url_API_files + f'/folder/{folder_id}'
         response = requests.delete(url_delete_folder, json=data_delete_folder, headers=self.headers)
-        data = response.json()
         print(f"Удаление папки с кодом:", response.status_code)
 
     def get_from_my_chapter(self) -> None:
@@ -137,7 +138,7 @@ class Files:
         """
         Переименование папки PUT api/2.0/files/folder/{folderId}
         :param data_rename_folder: новое название папки
-        :param folder_id: идентификатор переименуемой папки
+        :param folder_id: идентификатор папки к переименованию
         :return: None
         """
         url_rename_folder = self.url_API_files + f'/folder/{folder_id}'
@@ -185,32 +186,34 @@ class Files:
         print(f"Создание файла с кодом:", response.status_code)
         return data['response']['id']
 
-    def update_file(self, id_file: str, data_update_file):
+    def update_file(self, file_id: str, data_update_file: dict) -> None:
     # не работает
         """
-        изменяет содержимое файла с идентификатором PUT api/2.0/files/{fileId}/update
-        :param id_file: идентификатор файла
-        :return:
+        Изменение содержимого файла с идентификатором PUT api/2.0/files/{fileId}/update
+        :param file_id: идентификатор файла
+        :param data_update_file: данные изменения файла
+        :return: None
         """
-        url_update_file = self.url_API_files + f'/{id_file}' + '/update'
+        url_update_file = self.url_API_files + f'/{file_id}' + '/update'
         response = requests.put(url_update_file, json=data_update_file, headers=self.headers)
         print(f"Изменение файла с кодом:", response.status_code)
 
-    def open_file(self, id_file: str):
+    def open_file(self, file_id: str) -> None:
         """
-        Открывает файл GET api/2.0/files/file/{fileId}/openedit
-        :param id_file:
-        :return:
+        Открытие файла GET api/2.0/files/file/{fileId}/openedit
+        :param file_id: id файла
+        :return: None
         """
-        url_open_file = self.url_API_files + f'/file/{id_file}/openedit'
+        url_open_file = self.url_API_files + f'/file/{file_id}/openedit'
         response = requests.get(url_open_file, headers=self.headers)
         data = response.json()
         print(data)
 
-    def get_file_version(self, file_id):
+    def get_file_version(self, file_id: str) -> None:
         """
-        GET api/2.0/files/file/{fileId}/history
-        :return:
+        Получение истории файла GET api/2.0/files/file/{fileId}/history
+        :param file_id: id файла
+        :return: None
         """
         url_file_version = self.url_API_files + f'/file/{file_id}/history'
         response = requests.get(url_file_version, headers=self.headers)
@@ -218,10 +221,11 @@ class Files:
         print(f"Получение истории файла с кодом:", response.status_code)
         print(data)
 
-    def get_file_properties(self, file_id):
+    def get_file_properties(self, file_id: str) -> None:
         """
-        GET api/2.0/files/{fileId}/properties
-        :return:
+        Получение свойств файла GET api/2.0/files/{fileId}/properties
+        :param file_id: id файла
+        :return: None
         """
         url_file_properties = self.url_API_files + f'/{file_id}/properties'
         response = requests.get(url_file_properties, headers=self.headers)
@@ -229,45 +233,46 @@ class Files:
         print(f"Получение свойств файла с кодом:", response.status_code)
         print(data)
 
-    def delete_file(self, id_file, data_delete_file: dict) -> None:
+    def delete_file(self, file_id: str, data_delete_file: dict) -> None:
         """
         Удаление файла с заданным идентификатором DELETE api/2.0/files/file/{fileId}
-        :param id_file - идентификатор файла
-        :param data_delete_file - словарь с параметрами удаления
+        :param file_id: идентификатор файла
+        :param data_delete_file: словарь с параметрами удаления
         :return: None
         """
-        url_delete_file = self.url_API_files + f'/file/{id_file}'
+        url_delete_file = self.url_API_files + f'/file/{file_id}'
         response = requests.delete(url_delete_file, json=data_delete_file, headers=self.headers)
-        data = response.json()
         print(f"Удаление файла с кодом:", response.status_code)
-        return data
 
     def share_file(self, data_share_file: dict, file_id: int) -> None:
         """
         Установить права общего доступа к файлу с идентификатром PUT api/2.0/files/file/{fileId}/share
-        :param file_id - идентификатор файла
-        :param data_share_file - словарь с параметрами доступа
+        :param data_share_file: данные параметров доступа
+        :param file_id: идентификатор файла
+
         :return: None
         """
         url_share_file = self.url_API_files + f'/file/{file_id}/share'
         response = requests.put(url_share_file, json=data_share_file, headers=self.headers)
         print(f"Расшаривание файла с правом <<{data_share_file['share'][0]['access']}>> (1-Полный, 2-Чтение) с кодом:", response.status_code)
 
-    def delete_share_rights(self, data_delete_share_rights):
+    def delete_share_rights(self, data_delete_share_rights: dict) -> None:
         # не работает
         """
-        DELETE api/2.0/files/share
-        :return:
+        Удаление шары группы папок DELETE api/2.0/files/share
+        :param data_delete_share_rights: данные группы папок для удаления шары
+        :return: None
         """
         url_share_file = self.url_API_files + f'/share'
         response = requests.delete(url_share_file, json=data_delete_share_rights, headers=self.headers)
         print(f"Удаление шары файлов: <<{data_delete_share_rights['fileIds']}>>, папок:\
         <<{data_delete_share_rights['folderIds']}>> с кодом:", response.status_code)
 
-    def get_shared_file_info(self, file_id):
+    def get_shared_file_info(self, file_id: str) -> None:
         """
-        GET api/2.0/files/file/{fileId}/share
-        :return:
+        Получение детальной информации о расшаренном файле GET api/2.0/files/file/{fileId}/share
+        :param file_id: id файла
+        :return: None
         """
         url_share_file = self.url_API_files + f'/file/{file_id}/share'
         response = requests.get(url_share_file, headers=self.headers)

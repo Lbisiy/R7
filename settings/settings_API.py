@@ -9,6 +9,8 @@ class CommonSettings:
         self.headers = {'Authorization': f'Bearer {token}'}
 
         self.url_API_settings = url_auth + '/api/2.0/settings'
+        print("Инициализация Модуля Настройки")
+        print("***************************************************")
 
     def get_logo(self) -> None:
         """

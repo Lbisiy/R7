@@ -2,6 +2,7 @@
 
 import sys
 import logging
+import time
 
 from CRM.crm_API import CRM
 from calendars.calendars_API import Calendar
@@ -363,15 +364,22 @@ logging.basicConfig(
     ]
 )
 
-if len(sys.argv) < 2:
-    print("***************************************************")
-    logging.error("Для запуска скрипта введите запрос вида: python3 /CS_API/smoke.py http://192.168.26.130,\
-    где аргумент http - это адрес ВМ с CS")
-    print("***************************************************")
-else:
-    URL = sys.argv[1]
+# для запуска из PyCharm данный абзац должнен быть раскомментирован
+# для запуска из терминала SSH данный абзац должнен быть закомментирован
 
-#URL = "http://192.168.26.116/"
+# ------ начала абзаца ------
+# if len(sys.argv) < 2:
+#     print("***************************************************")
+#     logging.error("Для запуска скрипта введите запрос вида: python3 /CS_API/smoke.py http://192.168.26.130,\
+#     где аргумент http - это адрес ВМ с CS")
+#     print("***************************************************")
+# else:
+#     URL = sys.argv[1]
+# ------ конец абзаца ------
+
+# для запуска из PyCharm данная строка должна быть раскомментирована и указан IP тестируемого CS сервера
+# для запуска из терминала SSH данная строка должна быть закомментирована
+URL = "http://192.168.26.194"
 
 
 def test_smoke(url=URL, data=DATA_AUTH):
@@ -387,19 +395,23 @@ def test_smoke(url=URL, data=DATA_AUTH):
         file = Files(url, data)
         # создание Документа
         doc_id = file.create_file(DATA_CREATE_DOC)
+        time.sleep(3)
         # удаление Документа
         file.delete_file(doc_id, DATA_DELETE_FILE)
         # создание Таблицы
         table_id = file.create_file(DATA_CREATE_TABLE)
+        time.sleep(3)
         # удаление Таблицы
         file.delete_file(table_id, DATA_DELETE_FILE)
         # создание Презентации
         presentation_id = file.create_file(DATA_CREATE_PRESENT)
+        time.sleep(3)
         # удаление Презентации
         file.delete_file(presentation_id, DATA_DELETE_FILE)
 
         # создание Папки
         folder_id = file.create_folder(DATA_CREATE_FOLDER)
+        time.sleep(3)
         # удаление Папки
         file.delete_folder(DATA_DELETE_FOLDER, folder_id)
 

@@ -11,6 +11,8 @@ class Portal:
         self.headers = {'Authorization': f'Bearer {token}'}
 
         self.url_API_portal = url_auth + '/api/2.0/portal'
+        print("Инициализация Модуля Портал")
+        print("***************************************************")
 
     def get_invitation_link(self, params: str) -> None:
         """
@@ -22,9 +24,6 @@ class Portal:
         if params in data_params:
             url_get_link = self.url_API_portal + f'/users/invite/{params}'
             response = requests.get(url_get_link, headers=self.headers)
-            data = response.json()
-
-            print(data)
             print(f"Получение ссылки-приглашения к порталу с кодом:", response.status_code)
 
         else:
@@ -38,8 +37,6 @@ class Portal:
         url_get_count = self.url_API_portal + '/userscount'
         response = requests.get(url_get_count, headers=self.headers)
         data = response.json()
-
-        print(data)
         print(f"Получение кол-ва пользователей портала с кодом:", response.status_code)
 
     def get_tariff(self) -> None:
@@ -50,8 +47,6 @@ class Portal:
         url_get_tariff = self.url_API_portal + '/tariff'
         response = requests.get(url_get_tariff, headers=self.headers)
         data = response.json()
-
-        print(data)
         print(f"Получение тарифа портала с кодом:", response.status_code)
 
     def get_backup_schedule(self) -> None:
@@ -62,8 +57,6 @@ class Portal:
         url_get_backup_schedule = self.url_API_portal + '/getbackupschedule'
         response = requests.get(url_get_backup_schedule, headers=self.headers)
         data = response.json()
-
-        print(data)
         print(f"Получение расписания резервного копирования портала с кодом:", response.status_code)
 
     def get(self) -> None:
@@ -73,10 +66,7 @@ class Portal:
         """
         response = requests.get(self.url_API_portal, headers=self.headers)
         data = response.json()
-
-        print(data)
         print(f"Получение текущего портала с кодом:", response.status_code)
-
 
 
 if __name__ == "__main__":

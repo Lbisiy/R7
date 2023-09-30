@@ -1,1 +1,0 @@
-{'status': 1, 'statusCode': 500, 'error': {'message': 'Пользователь с таким адресом email уже зарегистрирован', 'hresult': -2146233088, 'data': {}}}

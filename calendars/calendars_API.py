@@ -10,12 +10,14 @@ class Calendar:
         self.headers = {'Authorization': f'Bearer {token}'}
 
         self.url_API_calendar = url_auth + '/api/2.0/calendar'
+        print("Инициализация Модуля Календарь")
+        print("***************************************************")
 
     def create_calendar(self, data_create_calendar: dict) -> int:
         """
         Создание календаря POST api/2.0/calendar
         :param data_create_calendar: данные для создаваемого словаря
-        :return: None
+        :return: id календаря
         """
         response = requests.post(self.url_API_calendar, json=data_create_calendar, headers=self.headers)
         data = response.json()
@@ -26,7 +28,7 @@ class Calendar:
         """
         Создание события в календаре по умолчанию POST api/2.0/calendar/event
         :param data_create_event: данные для изменяемого события
-        :return: None
+        :return: id события
         """
         url_create_event_default = self.url_API_calendar + '/event'
         response = requests.post(url_create_event_default, json=data_create_event, headers=self.headers)
@@ -39,7 +41,7 @@ class Calendar:
         Создание события в указанном календаре POST api/2.0/calendar/{calendarId}/event
         :param data_create_event: данные для создаваемого события
         :param calendar_id: номер календаря
-        :return: None
+        :return: id календаря
         """
         url_create_event_calendar = self.url_API_calendar + '/' + str(calendar_id) + '/event'
         response = requests.post(url_create_event_calendar, json=data_create_event, headers=self.headers)
@@ -110,6 +112,7 @@ class Calendar:
     def delete_event(self, event_id: int) -> None:
         """
         Удаление события DELETE api/2.0/calendar/events/{eventId}
+        :param event_id: id события
         :return: None
         """
         url_delete_event = self.url_API_calendar + f'/events/{event_id}'
@@ -128,8 +131,8 @@ class Calendar:
 
     def get_event(self, event_id: int) -> None:
         """
-        Получение события по идентификатору
-        :param номер события
+        Получение события по идентификатору GET api/2.0/calendar/events/{eventId}/historybyid
+        :param event_id: id события
         :return: None
         """
         url_get_event = self.url_API_calendar + '/events/' + str(event_id) + '/historybyid'
