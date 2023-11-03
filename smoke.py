@@ -12,6 +12,7 @@ from mail.mail_API import Mail
 from people.people_API import People
 from authentication.auth_API import Authentication
 from projects.project_API import Project
+from settings.settings_API import CommonSettings
 
 DATA_AUTH = {
     "userName": "support@r7-office.ru",
@@ -356,6 +357,15 @@ DATA_SHARE_FILE_READ = {
         "advancedSettings": []
     }
 
+DATA_MODULE_SECURITY_ACCESS = {
+        "items": [
+            {
+                "Key": "one",
+                "Value": True
+            }
+                ]
+        }
+
 logging.basicConfig(
     level=logging.INFO,  # Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     format='%(asctime)s [%(levelname)s] %(message)s',
@@ -379,11 +389,12 @@ logging.basicConfig(
 
 # для запуска из PyCharm данная строка должна быть раскомментирована и указан IP тестируемого CS сервера
 # для запуска из терминала SSH данная строка должна быть закомментирована
-URL = "http://192.168.26.194"
+URL = "http://192.168.26.91/"
 
 
 def test_smoke(url=URL, data=DATA_AUTH):
     try:
+        print(f'CS Server URL={url}')
         # Аутентификация
         auth = Authentication()
         auth.request_auth(url, data)
@@ -391,6 +402,16 @@ def test_smoke(url=URL, data=DATA_AUTH):
         # создание Пользователя
         people = People(url, data)
         user_id = people.create_user(DATA_CREATE_USER)
+
+        # открыть доступ к модулям, к которым закрыт доступ (например, Сообщество)
+        common_settings = CommonSettings(url, data)
+        result = common_settings.get_security_settings()
+        list_ = [val['webItemId'] for val in result['response'] if val['enabled'] is False]
+
+        for i, val in enumerate(list_):
+            DATA_MODULE_SECURITY_ACCESS['items'][0]['Key'] = list_[i]
+            DATA_MODULE_SECURITY_ACCESS['items'][0]['Value'] = True
+            common_settings.set_module_security_access(DATA_MODULE_SECURITY_ACCESS)
 
         file = Files(url, data)
         # создание Документа
@@ -535,12 +556,12 @@ def test_smoke(url=URL, data=DATA_AUTH):
         crm.delete_contact(company_id)
 
         community = Community(url, data)
+        # создать форум
+        forum_id = community.create_forum(DATA_CREATE_FORUM)
         # создать блог
         blog_id = community.create_blog_post(DATA_CREATE_BLOG)
         # создать новость
         event_id = community.create_event(DATA_CREATE_NEWS)
-        # создать форум
-        forum_id = community.create_forum(DATA_CREATE_FORUM)
         # создать тему
         topic_id = community.create_forum_topic(DATA_CREATE_TOPIC, forum_id)
 

@@ -1,6 +1,7 @@
 import requests
 
 from authentication.auth_API import Authentication
+from people.people_API import People
 
 
 class CommonSettings:
@@ -119,7 +120,7 @@ class CommonSettings:
         print(f"Получение настроек пароля к порталу с кодом:", response.status_code)
         print(data)
 
-    def get_security_settings(self) -> None:
+    def get_security_settings(self) -> dict:
         """
         Получение настроек безопасности продукта GET api/2.0/settings/security
         :return: None
@@ -129,7 +130,7 @@ class CommonSettings:
         data = response.json()
 
         print(f"Получение настроек безопасности продукта с кодом:", response.status_code)
-        print(data)
+        return data
 
     def get_size_quota(self) -> None:
         """
@@ -143,25 +144,49 @@ class CommonSettings:
         print(f"Получение квоты использования пространства с кодом:", response.status_code)
         print(data)
 
+    def set_module_security_access(self, data_module_security_access: dict) -> None:
+        """
+        Установка доступа к модулю по его ID PUT api/2.0/settings/security/access
+        :param data_module_security_access: данные для установки настроек доступа
+        :return:  None
+        """
+        url_set_security_access = self.url_API_settings + '/security/access'
+        response = requests.put(url_set_security_access, json=data_module_security_access, headers=self.headers)
+        data = response.json()
+        print(f"Установка доступа к продукту id={data['response'][0]['webItemId']} с кодом:", response.status_code)
 
-if __name__ == "__main__":
 
-    """
- **************************************************************************************************
-     Данные для авторизации (при запуске подставлять свои значения)
- **************************************************************************************************
-     """
-    url_auth = "http://192.168.25.179"
-    data_auth = {
-        "userName": "safin.marat@r7-office.ru",
-        "password": "12345678"
-    }
-
-    """
-**************************************************************************************************
-    Данные для обновления настроек активации электронной почты
-**************************************************************************************************
-       """
-    data_email_activation = {
-        "show": True,
-    }
+# if __name__ == "__main__":
+#
+#     """
+#  **************************************************************************************************
+#      Данные для авторизации (при запуске подставлять свои значения)
+#  **************************************************************************************************
+#      """
+#     url_auth = "http://192.168.26.119"
+#     data_auth = {
+#         "userName": "support@r7-office.ru",
+#         "password": "Hsuhsh35dr"
+#     }
+#
+#     """
+# **************************************************************************************************
+#     Данные для обновления настроек активации электронной почты
+# **************************************************************************************************
+#        """
+#     data_email_activation = {
+#         "show": True,
+#     }
+#
+#     """
+# **************************************************************************************************
+#     Данные для установки доступа к модулю
+# **************************************************************************************************
+#     """
+#     data_module_security_access = {
+#         "id": "some text",
+#         "enabled": True,
+#         "subjects": [
+#             "9924256A-739C-462b-AF15-E652A3B1B6EB"
+#         ]
+#     }
