@@ -16,7 +16,7 @@ from settings.settings_API import CommonSettings
 
 DATA_AUTH = {
     "userName": "support@r7-office.ru",
-    "password": "Hsuhsh35dr"
+    "password": "#####"
     }
 
 DATA_CREATE_USER = {
@@ -24,7 +24,7 @@ DATA_CREATE_USER = {
     "email": "r7testmail@mail.ru",
     "firstname": "Ivan",
     "lastname": "Ivanov",
-    "password": "Hsuhsh35dr"
+    "password": "#####"
     }
 
 DATA_UPDATE_STATUS = {
